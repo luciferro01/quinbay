@@ -34,9 +34,17 @@ function CreateToDoItems() {
     }
 
     let li = document.createElement("li");
-    const todoItems = `<div title="Hit Double Click and Complete" ondblclick="CompletedToDoItems(this)">${todoValue.value}</div><div>
-                    <img class="edit todo-controls" onclick="UpdateToDoItems(this)" src="./images/pencil.png" />
-                    <img class="delete todo-controls" onclick="DeleteToDoItems(this)" src="./images/delete.png" /></div></div>`;
+
+    const todoItems = `
+      <div title="Hit Double Click and Complete" ondblclick="CompletedToDoItems(this)">
+        <input type="checkbox" class="todo-checkbox" onclick="toggleCompletion(this)" />
+        <span>${todoValue.value}</span>
+      </div>
+      <div>
+        <img class="edit todo-controls" onclick="UpdateToDoItems(this)" src="./images/pencil.png" />
+        <img class="delete todo-controls" onclick="DeleteToDoItems(this)" src="./images/delete.png" />
+      </div>
+    `;
     li.innerHTML = todoItems;
     listItems.appendChild(li);
 
@@ -54,24 +62,27 @@ function CreateToDoItems() {
 function ReadToDoItems() {
   todo.forEach((element) => {
     let li = document.createElement("li");
-    let style = "";
-    if (element.status) {
-      style = "style='text-decoration: line-through'";
-    }
-    const todoItems = `<div ${style} title="Hit Double Click and Complete" ondblclick="CompletedToDoItems(this)">${
-      element.item
-    }
-    ${
-      style === ""
-        ? ""
-        : '<img class="todo-controls" src="./images/check.png" />'
-    }</div><div>
-    ${
-      style === ""
-        ? '<img class="edit todo-controls" onclick="UpdateToDoItems(this)" src="./images/pencil.png" />'
-        : ""
-    }
-    <img class="delete todo-controls" onclick="DeleteToDoItems(this)" src="./images/delete.png" /></div></div>`;
+
+    // Set the checkbox state based on the item's completion status
+    const isChecked = element.status ? "checked" : "";
+
+    const todoItems = `
+      <div title="Hit Double Click and Complete" ondblclick="CompletedToDoItems(this)">
+        <input type="checkbox" class="todo-checkbox" onclick="toggleCompletion(this)" ${isChecked} />
+        <span ${element.status ? 'style="text-decoration: line-through;"' : ""}>
+          ${element.item}
+        </span>
+      </div>
+      <div>
+        ${
+          !element.status
+            ? '<img class="edit todo-controls" onclick="UpdateToDoItems(this)" src="./images/pencil.png" />'
+            : ""
+        }
+        <img class="delete todo-controls" onclick="DeleteToDoItems(this)" src="./images/delete.png" />
+      </div>
+    `;
+
     li.innerHTML = todoItems;
     listItems.appendChild(li);
   });
@@ -162,6 +173,56 @@ function CompletedToDoItems(e) {
     setLocalStorage();
     setAlertMessage("Todo item Completed Successfully!");
   }
+}
+
+function toggleCompletion(checkbox) {
+  const todoItemText = checkbox.parentElement.querySelector("span");
+  const taskText = todoItemText.innerText.trim();
+  const todoControlsDiv =
+    checkbox.parentElement.parentElement.querySelector("div:last-child");
+
+  // Update the status in the todo array
+  todo.forEach((element) => {
+    if (element.item === taskText) {
+      element.status = checkbox.checked;
+    }
+  });
+
+  if (checkbox.checked) {
+    todoItemText.style.textDecoration = "line-through";
+
+    const editIcon = todoControlsDiv.querySelector(".edit");
+    if (editIcon) {
+      editIcon.remove();
+    }
+
+    if (!todoControlsDiv.querySelector(".completed-icon")) {
+      const completedIcon = document.createElement("img");
+      completedIcon.src = "./images/check.png";
+      completedIcon.className = "todo-controls completed-icon";
+      todoControlsDiv.appendChild(completedIcon);
+    }
+  } else {
+    todoItemText.style.textDecoration = "none";
+
+    const completedIcon = todoControlsDiv.querySelector(".completed-icon");
+    if (completedIcon) {
+      completedIcon.remove();
+    }
+
+    if (!todoControlsDiv.querySelector(".edit")) {
+      const editIcon = document.createElement("img");
+      editIcon.src = "./images/pencil.png";
+      editIcon.className = "edit todo-controls";
+      editIcon.setAttribute("onclick", "UpdateToDoItems(this)");
+      todoControlsDiv.insertBefore(editIcon, todoControlsDiv.firstChild);
+    }
+  }
+
+  setLocalStorage();
+  setAlertMessage(
+    `Todo item marked as ${checkbox.checked ? "Completed" : "Incomplete"}!`
+  );
 }
 
 function setLocalStorage() {

@@ -140,6 +140,13 @@ li.deleted-item {
   }
 }
 
+.todo-checkbox {
+  margin-right: 10px;
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+/* 
 .todo-radio {
   margin-right: 10px;
   cursor: pointer;
@@ -148,4 +155,4 @@ li.deleted-item {
 .todo-body input[type="radio"]:checked {
   background-color: limegreen;
   border-color: limegreen;
-}
+} */
