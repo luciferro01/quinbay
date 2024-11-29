@@ -144,15 +144,17 @@ li.deleted-item {
   margin-right: 10px;
   cursor: pointer;
   transform: scale(1.2);
+  accent-color: limegreen;
 }
 
-/* 
-.todo-radio {
-  margin-right: 10px;
-  cursor: pointer;
+.task-summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px 5px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  color: #333;
+  font-weight: 500;
 }
-
-.todo-body input[type="radio"]:checked {
-  background-color: limegreen;
-  border-color: limegreen;
-} */

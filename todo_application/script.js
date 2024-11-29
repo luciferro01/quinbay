@@ -36,7 +36,7 @@ function CreateToDoItems() {
     let li = document.createElement("li");
 
     const todoItems = `
-      <div title="Hit Double Click and Complete" ondblclick="CompletedToDoItems(this)">
+      <div title="Hit Double Click and Complete" ">
         <input type="checkbox" class="todo-checkbox" onclick="toggleCompletion(this)" />
         <span>${todoValue.value}</span>
       </div>
@@ -57,6 +57,8 @@ function CreateToDoItems() {
   }
   todoValue.value = "";
   setAlertMessage("Todo item Created Successfully!");
+
+  updateTaskCounts();
 }
 
 function ReadToDoItems() {
@@ -86,6 +88,8 @@ function ReadToDoItems() {
     li.innerHTML = todoItems;
     listItems.appendChild(li);
   });
+
+  updateTaskCounts();
 }
 ReadToDoItems();
 
@@ -129,49 +133,30 @@ function UpdateOnSelectionItems() {
   addUpdate.setAttribute("src", "./images/plus-sign.png");
   todoValue.value = "";
   setAlertMessage("Todo item Updated Successfully!");
+
+  updateTaskCounts();
 }
-
 function DeleteToDoItems(e) {
-  let deleteValue =
-    e.parentElement.parentElement.querySelector("div").innerText;
+  const deleteValue = e.parentElement.parentElement
+    .querySelector("div")
+    .innerText.trim();
 
-  if (confirm(`Are you sure. Due you want to delete this ${deleteValue}!`)) {
+  if (confirm(`Are you sure you want to delete this task: "${deleteValue}"?`)) {
     e.parentElement.parentElement.setAttribute("class", "deleted-item");
-    todoValue.focus();
 
-    todo.forEach((element) => {
-      if (element.item == deleteValue.trim()) {
-        todo.splice(element, 1);
-      }
-    });
+    const index = todo.findIndex((element) => element.item === deleteValue);
+
+    if (index !== -1) {
+      todo.splice(index, 1);
+    }
 
     setTimeout(() => {
       e.parentElement.parentElement.remove();
     }, 1000);
 
     setLocalStorage();
-  }
-}
-
-function CompletedToDoItems(e) {
-  console.log("Completed todo item");
-  if (e.parentElement.querySelector("div").style.textDecoration === "") {
-    const img = document.createElement("img");
-    img.src = "./images/check.png";
-    img.className = "todo-controls";
-    e.parentElement.querySelector("div").style.textDecoration = "line-through";
-    e.parentElement.querySelector("div").appendChild(img);
-    e.parentElement.querySelector("img.edit").remove();
-
-    todo.forEach((element) => {
-      if (
-        e.parentElement.querySelector("div").innerText.trim() == element.item
-      ) {
-        element.status = true;
-      }
-    });
-    setLocalStorage();
-    setAlertMessage("Todo item Completed Successfully!");
+    updateTaskCounts();
+    setAlertMessage("Todo item deleted successfully!");
   }
 }
 
@@ -223,6 +208,19 @@ function toggleCompletion(checkbox) {
   setAlertMessage(
     `Todo item marked as ${checkbox.checked ? "Completed" : "Incomplete"}!`
   );
+  updateTaskCounts();
+}
+
+function updateTaskCounts() {
+  const totalTasks = todo.length;
+  const completedTasks = todo.filter((task) => task.status).length;
+
+  document.getElementById(
+    "total-tasks"
+  ).innerText = `Total Tasks: ${totalTasks}`;
+  document.getElementById(
+    "completed-tasks"
+  ).innerText = `Completed: ${completedTasks}`;
 }
 
 function setLocalStorage() {
