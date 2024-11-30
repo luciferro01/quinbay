@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/todo")
+@CrossOrigin(origins = "*")
 public class TodoController {
 
     @Autowired
