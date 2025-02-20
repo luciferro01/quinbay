@@ -6,7 +6,7 @@ const addUpdate = document.getElementById("AddUpdateClick");
 const totalTasks = document.getElementById("total-tasks");
 const completedTasks = document.getElementById("completed-tasks");
 
-const url = "http://localhost:8080";
+const url = "http://localhost:8081";
 let updateId = null;
 let todo = [];
 
