@@ -7,6 +7,13 @@ public class Employee {
     private Date dateOfBirth;
     private double experience;
 
+    public Employee(String firstName, String lastName, Date dateOfBirth, double experience) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.experience = experience;
+    }
+
     public String getFirstName() {
         return firstName;
     }
