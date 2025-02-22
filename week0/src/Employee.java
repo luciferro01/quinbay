@@ -45,4 +45,14 @@ public class Employee {
     public void setExperience(double experience) {
         this.experience = experience;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", experience=" + experience +
+                '}';
+    }
 }

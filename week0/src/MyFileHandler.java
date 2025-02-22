@@ -1,4 +1,6 @@
+import java.util.List;
+
 interface MyFileHandler{
-    Employee read();
+    List<Employee> read();
     void write(Employee employee);
 }

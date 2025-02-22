@@ -1,37 +1,50 @@
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CsvFileHandler implements MyFileHandler {
 
     private final File file;
+    private CsvMapper csvMapper;
+
+    //Need of schema while using CSV with Jackson
+    private CsvSchema schema;
+
 
     public CsvFileHandler(File file) {
         this.file = file;
+        csvMapper = new CsvMapper();
+        schema = csvMapper.schemaFor(Employee.class).withHeader();
     }
 
     @Override
-    public Employee read() {
+    public List<Employee> read() {
+        List<Employee> list = new ArrayList<>();
+
         try {
-            CsvMapper csvMapper = new CsvMapper();
-            CsvSchema schema = csvMapper.schemaFor(Employee.class).withHeader();
-            return csvMapper.readerFor(Employee.class)
-                    .with(schema)
-                    .<Employee>readValues(file)
-                    .next(); // Read the first record
+            if (file.exists() && file.length() > 0) {
+                MappingIterator<Employee> mappingIterator = csvMapper.readerFor(Employee.class).with(schema).readValues(file);
+                while (mappingIterator.hasNext()) {
+                    list.add(mappingIterator.next());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+        return list;
     }
 
     @Override
     public void write(Employee emp) {
         try {
-            CsvMapper csvMapper = new CsvMapper();
-            CsvSchema schema = csvMapper.schemaFor(Employee.class).withHeader();
-            csvMapper.writer(schema).writeValue(file, emp);
+            List<Employee> list = read();
+            list.add(emp);
+            csvMapper.writer(schema).writeValue(file, list);
         } catch (Exception e) {
             e.printStackTrace();
         }
