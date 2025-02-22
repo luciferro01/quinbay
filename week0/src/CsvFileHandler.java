@@ -1,12 +1,13 @@
 public class CsvFileHandler implements MyFileHandler {
 
     @Override
-    public void read() {
+    public Employee read() {
 
+        return null;
     }
 
     @Override
-    public void write() {
+    public void write(Employee emp) {
 
     }
 }
