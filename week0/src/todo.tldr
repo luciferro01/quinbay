@@ -50,15 +50,17 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 391.2578125,
-			"y": 195.140625,
-			"lastActivityTimestamp": 1740230909887,
+			"x": 548.3685849645282,
+			"y": 606.1974119148628,
+			"lastActivityTimestamp": 1740232473283,
 			"meta": {}
 		},
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {},
+			"stylesForNextShape": {
+				"tldraw:size": "m"
+			},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
@@ -90,9 +92,9 @@
 			"isFocused": true,
 			"devicePixelRatio": 2,
 			"isCoarsePointer": false,
-			"isHoveringCanvas": true,
+			"isHoveringCanvas": false,
 			"openMenus": [],
-			"isChangingStyle": false,
+			"isChangingStyle": true,
 			"isReadonly": false,
 			"meta": {},
 			"duplicateProps": null,
@@ -106,7 +108,7 @@
 			"selectedShapeIds": [
 				"shape:xmGO1rweonbjmwEeK-_XK"
 			],
-			"hoveredShapeId": null,
+			"hoveredShapeId": "shape:xmGO1rweonbjmwEeK-_XK",
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
 			"focusedGroupId": null,
@@ -116,9 +118,9 @@
 			"typeName": "instance_page_state"
 		},
 		{
-			"x": 0,
-			"y": 0,
-			"z": 1,
+			"x": -66.83314042556331,
+			"y": 60.390910070894435,
+			"z": 0.5025590592437019,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
@@ -136,7 +138,7 @@
 				"color": "black",
 				"size": "m",
 				"w": 2079.8828125,
-				"text": "1. Implement Employee class with following specification \n        String firstName\n        String lastName \n        Date    dateOfBirth\n        double        experience\n\n2. Implement MyCollection class with the following specification\n        Array of 300 entries of Employee class\n        writeCounter\n        readCounter\n        The following methods to be syncronized \n        add(Employee) -> new element should be added at writeCounter, writeCounter should be increment after every insert \n        Employee get() -> element should be readCounter, readCounter should be incremented after every read operation \n\n3. Define a interface MyFileHandler with following methods\n        i. read\n        ii. write\n\n4. Declare CSVFileHandler, XMLFileHandler, JsonFileHandler classes that implements MyFileHandler \n        i. CSVFileHandler should have ability to read and write data in CSV\n        ii. XMLFileHandler should have ability to read and write data in XML\n        iii. JsonFileHandler should have ability to read and write data in JSON\n\n5. Generate three data files and each file containing 100 records. File one should be CSV format, file should be in XML format and file three should be in JSON format\n\n6. Develop a controller class MyController with the following logic\n        i. Create three threads and allocate one threads each for reading data from CSV, XML and JSON  \n        ii. Each thread reads record by record and insert into MyCollection class \n        iii. Main thread that has created three threads should wait for all threads to finish\n\n6. Once the read finishes, print the count of elements from MyCollection, it should be 300 and write counter should be properly updated to 300 \n\n7. Create three threads to write data from MyCollection with the following specifications \n        i. Each thread reading one record from MyCollection, read method should return the value and increment the counter\n        ii. Thread 1 should write record in CSV\n        iii. Thread 2 should write records in XML\n        iv. Thread 3 should write records in JSON \n        v. Once record is wirtten to the file thread should seek next record from MyCollection \n        vi. Each thread should finish reading after 100 records \n        vii. Files should not have duplicate records and should not have more than 100 records",
+				"text": "1. Implement Employee class with following specification \n        String firstName\n        String lastName h\n        Date    dateOfBirth\n        double        experience\n\n2. Implement MyCollection class with the following specification\n        Array of 300 entries of Employee class\n        writeCounter\n        readCounter\n        The following methods to be syncronized \n        add(Employee) -> new element should be added at writeCounter, writeCounter should be increment after every insert \n        Employee get() -> element should be readCounter, readCounter should be incremented after every read operation \n\n3. Define a interface MyFileHandler with following methodsh\n        i. read\n        ii. write\n\n4. Declare CSVFileHandler, XMLFileHandler, JsonFileHandler classes that implements MyFileHandler H\n        i. CSVFileHandler should have ability to read and write data in CSV\n        ii. XMLFileHandler should have ability to read and write data in XML\n        iii. JsonFileHandler should have ability to read and write data in JSON\n\n5. Generate three data files and each file containing 100 records. File one should be CSV format, file should be in XML format and file three should be in JSON format\n\n6. Develop a controller class MyController with the following logic\n        i. Create three threads and allocate one threads each for reading data from CSV, XML and JSON  \n        ii. Each thread reads record by record and insert into MyCollection class \n        iii. Main thread that has created three threads should wait for all threads to finish\n\n6. Once the read finishes, print the count of elements from MyCollection, it should be 300 and write counter should be properly updated to 300 \n\n7. Create three threads to write data from MyCollection with the following specifications \n        i. Each thread reading one record from MyCollection, read method should return the value and increment the counter\n        ii. Thread 1 should write record in CSV\n        iii. Thread 2 should write records in XML\n        iv. Thread 3 should write records in JSON \n        v. Once record is wirtten to the file thread should seek next record from MyCollection \n        vi. Each thread should finish reading after 100 records \n        vii. Files should not have duplicate records and should not have more than 100 records",
 				"font": "draw",
 				"textAlign": "start",
 				"autoSize": true,
