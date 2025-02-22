@@ -2,10 +2,10 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.File;
 
-public class XMLFileHandler implements MyFileHandler {
+public class XmlFileHandler implements MyFileHandler {
     private final File file;
 
-    public XMLFileHandler(File file) {
+    public XmlFileHandler(File file) {
         this.file = file;
     }
 
