@@ -1,0 +1,150 @@
+{
+	"tldrawFileFormatVersion": 1,
+	"schema": {
+		"schemaVersion": 2,
+		"sequences": {
+			"com.tldraw.store": 4,
+			"com.tldraw.asset": 1,
+			"com.tldraw.camera": 1,
+			"com.tldraw.document": 2,
+			"com.tldraw.instance": 25,
+			"com.tldraw.instance_page_state": 5,
+			"com.tldraw.page": 1,
+			"com.tldraw.instance_presence": 6,
+			"com.tldraw.pointer": 1,
+			"com.tldraw.shape": 4,
+			"com.tldraw.asset.bookmark": 2,
+			"com.tldraw.asset.image": 5,
+			"com.tldraw.asset.video": 5,
+			"com.tldraw.shape.group": 0,
+			"com.tldraw.shape.text": 2,
+			"com.tldraw.shape.bookmark": 2,
+			"com.tldraw.shape.draw": 2,
+			"com.tldraw.shape.geo": 9,
+			"com.tldraw.shape.note": 8,
+			"com.tldraw.shape.line": 5,
+			"com.tldraw.shape.frame": 0,
+			"com.tldraw.shape.arrow": 5,
+			"com.tldraw.shape.highlight": 1,
+			"com.tldraw.shape.embed": 4,
+			"com.tldraw.shape.image": 4,
+			"com.tldraw.shape.video": 2,
+			"com.tldraw.binding.arrow": 0
+		}
+	},
+	"records": [
+		{
+			"gridSize": 10,
+			"name": "",
+			"meta": {},
+			"id": "document:document",
+			"typeName": "document"
+		},
+		{
+			"meta": {},
+			"id": "page:page",
+			"name": "Page 1",
+			"index": "a1",
+			"typeName": "page"
+		},
+		{
+			"id": "pointer:pointer",
+			"typeName": "pointer",
+			"x": 391.2578125,
+			"y": 195.140625,
+			"lastActivityTimestamp": 1740230909887,
+			"meta": {}
+		},
+		{
+			"followingUserId": null,
+			"opacityForNextShape": 1,
+			"stylesForNextShape": {},
+			"brush": null,
+			"scribbles": [],
+			"cursor": {
+				"type": "default",
+				"rotation": 0
+			},
+			"isFocusMode": false,
+			"exportBackground": true,
+			"isDebugMode": false,
+			"isToolLocked": false,
+			"screenBounds": {
+				"x": 0,
+				"y": 0,
+				"w": 1173,
+				"h": 761
+			},
+			"insets": [
+				false,
+				false,
+				true,
+				false
+			],
+			"zoomBrush": null,
+			"isGridMode": false,
+			"isPenMode": false,
+			"chatMessage": "",
+			"isChatting": false,
+			"highlightedUserIds": [],
+			"isFocused": true,
+			"devicePixelRatio": 2,
+			"isCoarsePointer": false,
+			"isHoveringCanvas": true,
+			"openMenus": [],
+			"isChangingStyle": false,
+			"isReadonly": false,
+			"meta": {},
+			"duplicateProps": null,
+			"id": "instance:instance",
+			"currentPageId": "page:page",
+			"typeName": "instance"
+		},
+		{
+			"editingShapeId": "shape:xmGO1rweonbjmwEeK-_XK",
+			"croppingShapeId": null,
+			"selectedShapeIds": [
+				"shape:xmGO1rweonbjmwEeK-_XK"
+			],
+			"hoveredShapeId": null,
+			"erasingShapeIds": [],
+			"hintingShapeIds": [],
+			"focusedGroupId": null,
+			"meta": {},
+			"id": "instance_page_state:page:page",
+			"pageId": "page:page",
+			"typeName": "instance_page_state"
+		},
+		{
+			"x": 0,
+			"y": 0,
+			"z": 1,
+			"meta": {},
+			"id": "camera:page:page",
+			"typeName": "camera"
+		},
+		{
+			"x": 215.078125,
+			"y": 108.91796875,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:xmGO1rweonbjmwEeK-_XK",
+			"type": "text",
+			"props": {
+				"color": "black",
+				"size": "m",
+				"w": 2079.8828125,
+				"text": "1. Implement Employee class with following specification \n        String firstName\n        String lastName \n        Date    dateOfBirth\n        double        experience\n\n2. Implement MyCollection class with the following specification\n        Array of 300 entries of Employee class\n        writeCounter\n        readCounter\n        The following methods to be syncronized \n        add(Employee) -> new element should be added at writeCounter, writeCounter should be increment after every insert \n        Employee get() -> element should be readCounter, readCounter should be incremented after every read operation \n\n3. Define a interface MyFileHandler with following methods\n        i. read\n        ii. write\n\n4. Declare CSVFileHandler, XMLFileHandler, JsonFileHandler classes that implements MyFileHandler \n        i. CSVFileHandler should have ability to read and write data in CSV\n        ii. XMLFileHandler should have ability to read and write data in XML\n        iii. JsonFileHandler should have ability to read and write data in JSON\n\n5. Generate three data files and each file containing 100 records. File one should be CSV format, file should be in XML format and file three should be in JSON format\n\n6. Develop a controller class MyController with the following logic\n        i. Create three threads and allocate one threads each for reading data from CSV, XML and JSON  \n        ii. Each thread reads record by record and insert into MyCollection class \n        iii. Main thread that has created three threads should wait for all threads to finish\n\n6. Once the read finishes, print the count of elements from MyCollection, it should be 300 and write counter should be properly updated to 300 \n\n7. Create three threads to write data from MyCollection with the following specifications \n        i. Each thread reading one record from MyCollection, read method should return the value and increment the counter\n        ii. Thread 1 should write record in CSV\n        iii. Thread 2 should write records in XML\n        iv. Thread 3 should write records in JSON \n        v. Once record is wirtten to the file thread should seek next record from MyCollection \n        vi. Each thread should finish reading after 100 records \n        vii. Files should not have duplicate records and should not have more than 100 records",
+				"font": "draw",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "a1",
+			"typeName": "shape"
+		}
+	]
+}
