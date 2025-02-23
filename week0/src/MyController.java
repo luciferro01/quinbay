@@ -7,9 +7,12 @@ import java.util.List;
 
 public class MyController {
 
+    private static final MyCollection collection = new MyCollection();
+
     private static Employee generateEmployee(int id) throws ParseException {
         String firstName = "First" + id;
         String lastName = "Last" + id;
+        //TODO: It is not being implemented into the Employee class while writing to the file acting just like normal string
         Date dob = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
         double experience = id % 10 + 1;
         return new Employee(firstName, lastName, dob, experience);
@@ -53,12 +56,62 @@ public class MyController {
         csvThread.start();
         jsonThread.start();
         xmlThread.start();
+
+        try {
+            csvThread.join();
+            jsonThread.join();
+            xmlThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
 
 //        System.out.println((generateEmployee(1)));
-        generatedataFiles(20);
-        System.out.println("Hello, World!");
+        generatedataFiles(100);
+
+        Thread csvReaderThread = new Thread(() -> {
+            CsvFileHandler csvHandler = new CsvFileHandler(new File("employees.csv"));
+            List<Employee> employees = csvHandler.read();
+            for (Employee emp : employees) {
+                collection.addEmployee(emp);
+            }
+        });
+
+        Thread xmlReaderThread = new Thread(() -> {
+            XmlFileHandler xmlHandler = new XmlFileHandler(new File("employees.xml"));
+            List<Employee> employees = xmlHandler.read();
+            for (Employee emp : employees) {
+                collection.addEmployee(emp);
+            }
+        });
+
+        Thread jsonReaderThread = new Thread(() -> {
+            JsonFileHandler jsonHandler = new JsonFileHandler(new File("employees.json"));
+            List<Employee> employees = jsonHandler.read();
+            for (Employee emp : employees) {
+                collection.addEmployee(emp);
+            }
+        });
+
+        // Start reader threads
+        csvReaderThread.start();
+        xmlReaderThread.start();
+        jsonReaderThread.start();
+
+        // Wait for reader threads to finish
+        try {
+            csvReaderThread.join();
+            xmlReaderThread.join();
+            jsonReaderThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (Employee emp : collection.employees) {
+            {
+                System.out.println(emp);
+            }
+        }
     }
 }

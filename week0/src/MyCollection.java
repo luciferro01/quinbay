@@ -1,5 +1,5 @@
 public class MyCollection {
-    private final Employee[] employees = new Employee[300];
+    public final Employee[] employees = new Employee[300];
     private int writeCounter = 0;
     private int readCounter = 0;
 
