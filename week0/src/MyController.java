@@ -27,6 +27,7 @@ public class MyController {
         }
 
         Thread csvThread = new Thread(() -> {
+            new File("employees.csv").delete();
             MyFileHandler csvFileHandler = new CsvFileHandler( new File("employees.csv"));
             for (Employee emp: employees) {
                 csvFileHandler.write(emp);
@@ -34,6 +35,7 @@ public class MyController {
         });
 
         Thread jsonThread = new Thread(() -> {
+            new File("employees.json").delete();
             MyFileHandler jsonFileHandler = new JsonFileHandler(new File("employees.json"));
             for (Employee emp: employees) {
                 jsonFileHandler.write(emp);
@@ -41,6 +43,7 @@ public class MyController {
         });
 
         Thread xmlThread = new Thread(() -> {
+            new File("employees.xml").delete();
             MyFileHandler xmlFileHandler = new XmlFileHandler(new File("employees.xml"));
             for (Employee emp: employees) {
                 xmlFileHandler.write(emp);

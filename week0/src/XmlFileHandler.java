@@ -20,7 +20,11 @@ public class XmlFileHandler implements MyFileHandler {
         try {
             if (file.exists() && file.length() > 0) {
                 Employee[] emp = xmlMapper.readValue(file, Employee[].class);
-                list = Arrays.asList(emp);
+
+                // Got to know that Arrays.asList() returns a fixed-size list that does not support add or remove methods.
+                // So, I changed it to ArrayList again.
+                list = new ArrayList<>(Arrays.asList(emp));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,8 +37,11 @@ public class XmlFileHandler implements MyFileHandler {
     public void write(Employee emp) {
         try {
             List<Employee> list = read();
-            //TODO: Fix this issue that it is unable to write in it
-//            list.add(emp);
+//            System.out.println(list);
+//            if (list == null) {
+//                list = new ArrayList<>();
+//            }
+            list.add(emp);
             xmlMapper.writeValue(file, list);
         } catch (Exception e) {
             e.printStackTrace();
