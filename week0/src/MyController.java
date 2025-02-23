@@ -109,11 +109,67 @@ public class MyController {
             e.printStackTrace();
         }
 
+        System.out.println("Write Counter: " + collection.getWriteCounter());
+
+
+        //Writer Threads to write into the files
+
+        Thread csvWriterThread = new Thread(() -> {
+            CsvFileHandler csvHandler = new CsvFileHandler(new File("employees.csv"));
+            new File("employees.csv").delete();  // Clear output file
+            for (int i = 0; i < 100; i++) {
+                Employee emp = collection.getEmployee();
+                if (emp != null) {
+                    csvHandler.write(emp);
+                }
+            }
+        });
+
+        Thread xmlWriterThread = new Thread(() -> {
+            XmlFileHandler xmlHandler = new XmlFileHandler(new File("employees.xml"));
+            new File("employees.xml").delete();
+            for (int i = 0; i < 100; i++) {
+                Employee emp = collection.getEmployee();
+                if (emp != null) {
+                    xmlHandler.write(emp);
+                }
+            }
+        });
+
+        Thread jsonWriterThread = new Thread(() -> {
+            JsonFileHandler jsonHandler = new JsonFileHandler(new File("employees.json"));
+            new File("employees.json").delete();
+            for (int i = 0; i < 100; i++) {
+                Employee emp = collection.getEmployee();
+                if (emp != null) {
+                    jsonHandler.write(emp);
+                }
+            }
+        });
+
+        // Starting writer threads
+        csvWriterThread.start();
+        xmlWriterThread.start();
+        jsonWriterThread.start();
+
+        // Wait for all writer threads to finish
+        try {
+            csvWriterThread.join();
+            xmlWriterThread.join();
+            jsonWriterThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Data writing completed. Check output files for 100 records each.");
+
+
         // Just for testing purposes nothing personal
 //        for (Employee emp : collection.employees) {
 //            {
 //                System.out.println(emp);
 //            }
 //        }
+
     }
 }
