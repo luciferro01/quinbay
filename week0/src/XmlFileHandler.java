@@ -33,7 +33,8 @@ public class XmlFileHandler implements MyFileHandler {
     public void write(Employee emp) {
         try {
             List<Employee> list = read();
-            list.add(emp);
+            //TODO: Fix this issue that it is unable to write in it
+//            list.add(emp);
             xmlMapper.writeValue(file, list);
         } catch (Exception e) {
             e.printStackTrace();

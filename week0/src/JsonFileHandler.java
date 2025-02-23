@@ -23,7 +23,6 @@ public class JsonFileHandler implements MyFileHandler {
                 Employee[] employees = objectMapper.readValue(file, Employee[].class);
                 for (Employee emp: employees) {
                     list.add(emp);
-
                 }
 
                 // This is another way to convert array to list

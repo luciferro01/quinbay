@@ -12,7 +12,7 @@ public class DataGenerator {
 
 
         //JSON
-//        JsonFileHandler jsonFileHandler = new JsonFileHandler(new File("employee.json"));
+//        JsonFileHandler jsonFileHandler = new JsonFileHandler(new File("employees.json"));
 //
 //        for (int i = 0; i < 100; i++) {
 //            Employee emp = new Employee("Json Emp", i + "", new Date(), 5.5);
@@ -20,14 +20,14 @@ public class DataGenerator {
 //        }
 //
 //        //CSV
-//        CsvFileHandler csvFileHandler = new CsvFileHandler(new File("employee.csv"));
+//        CsvFileHandler csvFileHandler = new CsvFileHandler(new File("employees.csv"));
 //        for (int i = 0; i < 100; i++) {
 //            Employee emp = new Employee("CSV Emp", i + "", new Date(), 5.5);
 //            csvFileHandler.write(emp);
 //        }
 //
 //        //XML
-//        XmlFileHandler xmlFileHandler = new XmlFileHandler(new File("employee.xml"));
+//        XmlFileHandler xmlFileHandler = new XmlFileHandler(new File("employees.xml"));
 //        for (int i = 0; i < 100; i++) {
 //            Employee emp = new Employee("XML Emp", i + "", new Date(), 5.5);
 //            xmlFileHandler.write(emp);
@@ -36,7 +36,7 @@ public class DataGenerator {
 
         //Trying another way to create the arrayList/List and then writing to the file
         //JSON
-        JsonFileHandler jsonFileHandler = new JsonFileHandler(new File("employee.json"));
+        JsonFileHandler jsonFileHandler = new JsonFileHandler(new File("employees.json"));
         ObjectMapper jsonMapper = new ObjectMapper();
         ObjectNode jsonNode = jsonMapper.createObjectNode();
         ObjectNode[] jsonNodeArray = new ObjectNode[100];
@@ -44,7 +44,7 @@ public class DataGenerator {
         for (int i = 0; i < 100; i++) {
             jsonNodeArray[i] = jsonMapper.createObjectNode().put("FirstName", i);
         }
-        jsonMapper.writeValue(new File("employee.json"), jsonNodeArray);
+        jsonMapper.writeValue(new File("employees.json"), jsonNodeArray);
 
     }
 }

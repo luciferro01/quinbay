@@ -9,10 +9,10 @@ import java.util.List;
 public class CsvFileHandler implements MyFileHandler {
 
     private final File file;
-    private CsvMapper csvMapper;
+    private final CsvMapper csvMapper;
 
     //Need of schema while using CSV with Jackson
-    private CsvSchema schema;
+    private final CsvSchema schema;
 
 
     public CsvFileHandler(File file) {

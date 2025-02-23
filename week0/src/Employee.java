@@ -7,6 +7,9 @@ public class Employee {
     private Date dateOfBirth;
     private double experience;
 
+    //Defualt constructor is required since it is giving error that for the initialization.
+    public Employee() {}
+
     public Employee(String firstName, String lastName, Date dateOfBirth, double experience) {
         this.firstName = firstName;
         this.lastName = lastName;
