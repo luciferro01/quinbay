@@ -108,10 +108,12 @@ public class MyController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for (Employee emp : collection.employees) {
-            {
-                System.out.println(emp);
-            }
-        }
+
+        // Just for testing purposes nothing personal
+//        for (Employee emp : collection.employees) {
+//            {
+//                System.out.println(emp);
+//            }
+//        }
     }
 }
