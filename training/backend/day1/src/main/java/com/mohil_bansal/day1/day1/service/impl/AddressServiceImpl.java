@@ -1,14 +1,12 @@
 package com.mohil_bansal.day1.day1.service.impl;
 
 import com.mohil_bansal.day1.day1.DTO.AddressDTO;
-import com.mohil_bansal.day1.day1.DTO.AddressDTO;
 import com.mohil_bansal.day1.day1.entity.Address;
-import com.mohil_bansal.day1.day1.entity.Address;
+import com.mohil_bansal.day1.day1.entity.Student;
 import com.mohil_bansal.day1.day1.repo.AddressRepository;
 import com.mohil_bansal.day1.day1.service.AddressService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,12 +39,16 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDTO createAddress(AddressDTO Address) {
-        System.out.println(Address);
+    public AddressDTO createAddress(AddressDTO addressDTO) {
+//        System.out.println(Address);
         Address entityAdress = new Address();
-        BeanUtils.copyProperties(Address, entityAdress);
+        Student student = new Student();
+        BeanUtils.copyProperties(addressDTO.getStudentDTO(), student);
+
+        BeanUtils.copyProperties(addressDTO, entityAdress);
+        entityAdress.setStudent(student);
         addressRepository.save(entityAdress);
-        return Address;
+        return addressDTO;
     }
 
     @Override

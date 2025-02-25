@@ -14,16 +14,18 @@ public class JsonFileHandler implements MyFileHandler {
         objectMapper = new ObjectMapper();
     }
 
+    private static Employee[] employees;
+    private static int readCount = 0;
+    private static int writeCount = 0;
+
     @Override
-    public List<Employee> read() {
-        List<Employee> list = new ArrayList<>();
+    public Employee read() {
+        Employee employee = null;
         try {
 
             if (file.exists() && file.length() > 0) {
-                Employee[] employees = objectMapper.readValue(file, Employee[].class);
-                for (Employee emp: employees) {
-                    list.add(emp);
-                }
+                Employee[] employees = objectMapper.readValue(file, Employee[readCount].class);
+//                employee = objectMapper.readValue(file, Employee[readCount].class);
 
                 // This is another way to convert array to list
                 //list = Arrays.asList(employees);
@@ -31,7 +33,9 @@ public class JsonFileHandler implements MyFileHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+//        return list;
+        return employee;
+
     }
 
     @Override
