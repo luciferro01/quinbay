@@ -15,6 +15,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,15 +38,24 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private InstructorRepository instructorRepository;
 
+//    @Override
+//    public List<CourseDto> getAllCourses() {
+//        log.info("Fetching all courses");
+//        List<Course> courses = courseRepository.findAll();
+//        return courses.stream().map(course -> {
+//            CourseDto dto = new CourseDto();
+//            BeanUtils.copyProperties(course, dto);
+//            return dto;
+//        }).collect(Collectors.toList());
+//    }
+
     @Override
-    public List<CourseDto> getAllCourses() {
-        log.info("Fetching all courses");
-        List<Course> courses = courseRepository.findAll();
-        return courses.stream().map(course -> {
+    public Page<CourseDto> getAllCourses(Pageable pageable) {
+        return courseRepository.findAll(pageable).map(course -> {
             CourseDto dto = new CourseDto();
             BeanUtils.copyProperties(course, dto);
             return dto;
-        }).collect(Collectors.toList());
+        });
     }
 
     @Override

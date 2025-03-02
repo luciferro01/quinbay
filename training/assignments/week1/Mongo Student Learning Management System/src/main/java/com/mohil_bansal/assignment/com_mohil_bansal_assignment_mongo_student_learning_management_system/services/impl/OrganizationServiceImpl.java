@@ -16,6 +16,8 @@ import com.mohil_bansal.assignment.com_mohil_bansal_assignment_mongo_student_lea
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,14 +31,22 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    //    @Override
+//    public List<OrganizationDto> getAllOrganizations() {
+//        List<Organization> organizations = organizationRepository.findAll();
+//        return organizations.stream().map(org -> {
+//            OrganizationDto dto = new OrganizationDto();
+//            BeanUtils.copyProperties(org, dto);
+//            return dto;
+//        }).collect(Collectors.toList());
+//    }
     @Override
-    public List<OrganizationDto> getAllOrganizations() {
-        List<Organization> organizations = organizationRepository.findAll();
-        return organizations.stream().map(org -> {
+    public Page<OrganizationDto> getAllOrganizations(Pageable pageable) {
+        return organizationRepository.findAll(pageable).map(org -> {
             OrganizationDto dto = new OrganizationDto();
             BeanUtils.copyProperties(org, dto);
             return dto;
-        }).collect(Collectors.toList());
+        });
     }
 
     @Override
@@ -52,10 +62,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationDto addOrganization(OrganizationDto organizationDto) {
         Organization organization = new Organization();
         BeanUtils.copyProperties(organizationDto, organization);
-        if(organizationDto.getOrganizationId() != null) {
-         if(organizationRepository.findById(organizationDto.getOrganizationId()).isPresent()){
-            throw new DataAlreadyExistsException("Organization already exists");
-         }
+        if (organizationDto.getOrganizationId() != null) {
+            if (organizationRepository.findById(organizationDto.getOrganizationId()).isPresent()) {
+                throw new DataAlreadyExistsException("Organization already exists");
+            }
         }
         organization.setOrganizationId(null);
         Organization savedOrganization = organizationRepository.save(organization);

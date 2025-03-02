@@ -14,6 +14,8 @@ import com.mohil_bansal.assignment.com_mohil_bansal_assignment_mongo_student_lea
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,15 +35,23 @@ public class InstructorServiceImpl implements InstructorService {
     @Autowired
     private CourseRepository courseRepository;
 
+    //    @Override
+//    public List<InstructorDto> getAllInstructors() {
+//        log.info("Fetching all instructors");
+//        List<Instructor> instructors = instructorRepository.findAll();
+//        return instructors.stream().map(instructor -> {
+//            InstructorDto dto = new InstructorDto();
+//            BeanUtils.copyProperties(instructor, dto);
+//            return dto;
+//        }).collect(Collectors.toList());
+//    }
     @Override
-    public List<InstructorDto> getAllInstructors() {
-        log.info("Fetching all instructors");
-        List<Instructor> instructors = instructorRepository.findAll();
-        return instructors.stream().map(instructor -> {
+    public Page<InstructorDto> getAllInstructors(Pageable pageable) {
+        return instructorRepository.findAll(pageable).map(instructor -> {
             InstructorDto dto = new InstructorDto();
             BeanUtils.copyProperties(instructor, dto);
             return dto;
-        }).collect(Collectors.toList());
+        });
     }
 
     @Override

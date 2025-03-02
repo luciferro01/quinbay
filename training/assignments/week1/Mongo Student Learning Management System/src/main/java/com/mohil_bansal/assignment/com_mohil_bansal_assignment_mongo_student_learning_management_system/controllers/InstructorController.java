@@ -7,6 +7,10 @@ import com.mohil_bansal.assignment.com_mohil_bansal_assignment_mongo_student_lea
 import com.mohil_bansal.assignment.com_mohil_bansal_assignment_mongo_student_learning_management_system.utils.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +24,19 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
+    //    @GetMapping
+//    public ResponseEntity<CommonResponse<List<InstructorDto>>> getAllInstructors() {
+//        log.info("GET /instructors");
+//        List<InstructorDto> dtos = instructorService.getAllInstructors();
+//        CommonResponse<List<InstructorDto>> response = CommonResponse.success(dtos, 200, "Instructors fetched successfully");
+//        return ResponseEntity.ok(response);
+//    }
     @GetMapping
-    public ResponseEntity<CommonResponse<List<InstructorDto>>> getAllInstructors() {
+    public ResponseEntity<CommonResponse<PageImpl<InstructorDto>>> getAllInstructors(@RequestParam("page") int page, @RequestParam("size") int size) {
         log.info("GET /instructors");
-        List<InstructorDto> dtos = instructorService.getAllInstructors();
-        CommonResponse<List<InstructorDto>> response = CommonResponse.success(dtos, 200, "Instructors fetched successfully");
+        Pageable pageable = PageRequest.of(page, size);
+        Page<InstructorDto> dtos = instructorService.getAllInstructors(pageable);
+        CommonResponse<PageImpl<InstructorDto>> response = CommonResponse.success(new PageImpl<>(dtos.getContent(), pageable, dtos.getTotalPages()), 200, "Instructors fetched successfully");
         return ResponseEntity.ok(response);
     }
 

@@ -10,6 +10,10 @@ import com.mohil_bansal.assignment.com_mohil_bansal_assignment_mongo_student_lea
 import com.mohil_bansal.assignment.com_mohil_bansal_assignment_mongo_student_learning_management_system.utils.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +27,18 @@ public class OrganizationController {
     @Autowired
     private OrganizationService organizationService;
 
+    //    @GetMapping
+//    public ResponseEntity<CommonResponse<List<OrganizationDto>>> getAllOrganizations() {
+//        List<OrganizationDto> dtos = organizationService.getAllOrganizations();
+//        CommonResponse<List<OrganizationDto>> response = CommonResponse.success(dtos, 200, "Organizations fetched successfully");
+//        return ResponseEntity.ok(response);
+//    }
     @GetMapping
-    public ResponseEntity<CommonResponse<List<OrganizationDto>>> getAllOrganizations() {
-        List<OrganizationDto> dtos = organizationService.getAllOrganizations();
-        CommonResponse<List<OrganizationDto>> response = CommonResponse.success(dtos, 200, "Organizations fetched successfully");
+    public ResponseEntity<CommonResponse<PageImpl<OrganizationDto>>> getAllOrganizations(@RequestParam("page") int page, @RequestParam("size") int size) {
+        log.info("GET /organizations");
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrganizationDto> dtos = organizationService.getAllOrganizations(pageable);
+        CommonResponse<PageImpl<OrganizationDto>> response = CommonResponse.success(new PageImpl<>(dtos.getContent(), pageable, dtos.getTotalPages()), 200, "Organizations fetched successfully");
         return ResponseEntity.ok(response);
     }
 

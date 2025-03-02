@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,18 +38,28 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private CourseRepository courseRepository;
 
+//    @Override
+//    public List<StudentDto> getAllStudents() {
+//        log.info("Fetching all students from DB");
+//        List<Student> students = studentRepository.findAll();
+//        return students.stream().map(student -> {
+//            StudentDto dto = new StudentDto();
+//            BeanUtils.copyProperties(student, dto);
+//            return dto;
+//        }).collect(Collectors.toList());
+//    }
+
     @Override
-    public List<StudentDto> getAllStudents() {
-        log.info("Fetching all students from DB");
-        List<Student> students = studentRepository.findAll();
-        return students.stream().map(student -> {
+    public Page<StudentDto> getAllStudents(Pageable pageable) {
+        return studentRepository.findAll(pageable).map(student -> {
             StudentDto dto = new StudentDto();
             BeanUtils.copyProperties(student, dto);
             return dto;
-        }).collect(Collectors.toList());
+        });
     }
 
-    @Override
+
+        @Override
     @Cacheable(cacheNames = "students", key = "#studentId")
     public StudentDto getStudentById(String studentId) {
         log.info("Fetching student with ID {}", studentId);
