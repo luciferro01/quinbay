@@ -1,10 +1,8 @@
 package com.mohil_bansal.assignment.student_learning_management_system.services.impl;
 
-import com.mohil_bansal.assignment.student_learning_management_system.dto.CourseDetailsDto;
-import com.mohil_bansal.assignment.student_learning_management_system.dto.StudentDto;
+import com.mohil_bansal.assignment.student_learning_management_system.dto.CourseDto;
 import com.mohil_bansal.assignment.student_learning_management_system.entity.Course;
 import com.mohil_bansal.assignment.student_learning_management_system.entity.Organization;
-import com.mohil_bansal.assignment.student_learning_management_system.entity.Student;
 import com.mohil_bansal.assignment.student_learning_management_system.exception.DataAlreadyExistsException;
 import com.mohil_bansal.assignment.student_learning_management_system.exception.ResourceNotFoundException;
 import com.mohil_bansal.assignment.student_learning_management_system.repository.CourseRepository;
@@ -12,100 +10,102 @@ import com.mohil_bansal.assignment.student_learning_management_system.repository
 import com.mohil_bansal.assignment.student_learning_management_system.services.CourseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class CourseServiceImpl implements CourseService {
 
-    private final CourseRepository courseRepository;
-    private final OrganizationRepository organizationRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository, OrganizationRepository organizationRepository) {
-        this.courseRepository = courseRepository;
-        this.organizationRepository = organizationRepository;
-    }
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
-    public List<Course> getAllCourses() {
+    @Override
+    public List<CourseDto> getAllCourses() {
         log.info("Fetching all courses");
-        return courseRepository.findAll();
-    }
-
-    @Cacheable(key = "#courseId", cacheNames = "courses")
-    public Course getCourseById(Long courseId) {
-        log.info("Fetching course with ID {}", courseId);
-        return courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
-    }
-
-    @Transactional
-//    @CachePut(key = "#course.courseId", cacheNames = "courses")
-    public Course addCourse(Course course, Long organizationId) {
-        log.info("Adding course with ID {}", course.getCourseId());
-        Organization organization = organizationRepository.findById(organizationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
-        if(course.getCourseId() != null && courseRepository.findById(course.getCourseId()).isPresent()){
-            throw new DataAlreadyExistsException("Course already exists");
-        }
-        course.setOrganization(organization);
-        return courseRepository.save(course);
-    }
-
-    @Transactional
-    @CacheEvict(key = "#courseId", cacheNames = "courses")
-    public void deleteCourse(Long courseId) {
-        log.info("Deleting course with ID {}", courseId);
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
-        courseRepository.delete(course);
+        List<Course> courses = courseRepository.findAll();
+        return courses.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public CourseDetailsDto getCourseDetailsById(Long courseId) {
-//        Course course = courseRepository.findCourseWithDetailsById(courseId);
-//        if (course == null) {
-//            throw new ResourceNotFoundException("Course not found with id: " + courseId);
-//        }
-//
-//        CourseDetailsDto courseDetailsDto = new CourseDetailsDto();
-//        courseDetailsDto.setCourseId(course.getCourseId());
-//        courseDetailsDto.setCourseName(course.getCourseName());
-//        courseDetailsDto.setCourseFee(course.getCourseFee());
-//        courseDetailsDto.setCourseStatus(course.getCourseStatus());
-//
-//        if (course.getOrganization() != null) {
-//            courseDetailsDto.setOrganizationId(course.getOrganization().getOrganizationId());
-//            courseDetailsDto.setOrganizationName(course.getOrganization().getOrganizationName());
-//        }
-//
-//        if (course.getInstructor() != null) {
-//            courseDetailsDto.setInstructorId(course.getInstructor().getInstructorId());
-//            courseDetailsDto.setInstructorName(course.getInstructor().getInstructorName());
-//        }
-//
-//        List<StudentDto> studentDtos = new ArrayList<>();
-//        if (course.getStudentCourses() != null) {
-//            studentDtos = course.getStudentCourses().stream()
-//                    .map(StudentCourse::getStudent)
-//                    .filter(student -> student != null)
-//                    .map(this::convertToStudentDto)
-//                    .collect(Collectors.toList());
-//        }
-//        courseDetailsDto.setStudents(studentDtos);
-
-        return courseRepository.findCourseWithDetailsById(courseId);
+    @Cacheable(key = "#id", cacheNames = "courses")
+    public CourseDto getCourseById(Long id) {
+        log.info("Fetching course with ID {}", id);
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + id));
+        return convertToDto(course);
     }
 
-    private StudentDto convertToStudentDto(Student student) {
-        StudentDto dto = new StudentDto();
-        BeanUtils.copyProperties(student, dto);
+    @Override
+    @Transactional
+    public CourseDto addCourse(CourseDto courseDto, Long orgId) {
+        log.info("Adding new course to organization with ID {}", orgId);
+        Organization organization = organizationRepository.findById(orgId)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id: " + orgId));
+
+        Course course = convertToEntity(courseDto);
+
+        if(course.getCourseId() != null && courseRepository.findById(course.getCourseId()).isPresent()) {
+            throw new DataAlreadyExistsException("Course already exists");
+        }
+
+        course.setOrganization(organization);
+        Course savedCourse = courseRepository.save(course);
+        return convertToDto(savedCourse);
+    }
+
+    @Override
+    @Transactional
+    @CachePut(key = "#id", cacheNames = "courses")
+    public CourseDto updateCourse(Long id, CourseDto courseDto) {
+        log.info("Updating course with ID {}", id);
+        Course existingCourse = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + id));
+
+        existingCourse.setCourseName(courseDto.getCourseName());
+
+        Course updatedCourse = courseRepository.save(existingCourse);
+        return convertToDto(updatedCourse);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(key = "#id", cacheNames = "courses")
+    public void deleteCourse(Long id) {
+        log.info("Deleting course with ID {}", id);
+        if (!courseRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Course not found with id: " + id);
+        }
+        courseRepository.deleteById(id);
+    }
+
+    private CourseDto convertToDto(Course course) {
+        CourseDto dto = new CourseDto();
+        BeanUtils.copyProperties(course, dto);
+        dto.setOrganizationId(course.getOrganization().getOrganizationId());
+
+        if (course.getInstructor() != null) {
+            dto.setInstructorId(course.getInstructor().getInstructorId());
+        }
+
         return dto;
     }
-}
 
+    private Course convertToEntity(CourseDto dto) {
+        Course entity = new Course();
+        BeanUtils.copyProperties(dto, entity);
+        return entity;
+    }
+}

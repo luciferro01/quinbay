@@ -1,5 +1,6 @@
 package com.mohil_bansal.assignment.student_learning_management_system.services.impl;
 
+import com.mohil_bansal.assignment.student_learning_management_system.dto.InstructorDto;
 import com.mohil_bansal.assignment.student_learning_management_system.entity.Course;
 import com.mohil_bansal.assignment.student_learning_management_system.entity.Instructor;
 import com.mohil_bansal.assignment.student_learning_management_system.entity.Organization;
@@ -10,6 +11,7 @@ import com.mohil_bansal.assignment.student_learning_management_system.repository
 import com.mohil_bansal.assignment.student_learning_management_system.repository.OrganizationRepository;
 import com.mohil_bansal.assignment.student_learning_management_system.services.InstructorService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,83 +35,111 @@ public class InstructorServiceImpl implements InstructorService {
     @Autowired
     private CourseRepository courseRepository;
 
-
-    public List<Instructor> getAllInstructors() {
+    @Override
+    public List<InstructorDto> getAllInstructors() {
         log.info("Fetching all instructors");
-        return instructorRepository.findAll();
+        List<Instructor> instructors = instructorRepository.findAll();
+        return instructors.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
-
-    @Cacheable(key = "#instructorId", cacheNames = "instructors")
-    public Instructor findInstructionById(Long instructorId) {
-        log.info("Fetching instructor with ID {}", instructorId);
-        return instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found"));
+    @Override
+    @Cacheable(key = "#id", cacheNames = "instructors")
+    public InstructorDto findInstructorById(Long id) {
+        log.info("Fetching instructor with ID {}", id);
+        Instructor instructor = instructorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found with id: " + id));
+        return convertToDto(instructor);
     }
 
+    @Override
     @Transactional
-    public Instructor addInstructor(Instructor instructor, Long organizationId) {
-        log.info("Adding instructor with ID {}", instructor.getInstructorId());
-        Organization organization = organizationRepository.findById(organizationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
-
-        if(instructor.getInstructorId() != null && instructorRepository.findById(instructor.getInstructorId()).isPresent()){
-            throw new DataAlreadyExistsException("Instructor already exists");
-        }
-        instructor.setOrganization(organization);
-        return instructorRepository.save(instructor);
-    }
-
-
-    @Transactional
-    @CachePut(key="#instructorId", cacheNames = "instructors")
-    public Instructor registerInstructorToCourse(Long instructorId, Long courseId) {
+    @CachePut(key = "#instructorId", cacheNames = "instructors")
+    public InstructorDto registerInstructorToCourse(Long instructorId, Long courseId) {
         log.info("Adding instructor with ID {} to Course {}", instructorId, courseId);
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found with id: " + instructorId));
 
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
 
         if(course.getInstructor() != null){
             throw new DataAlreadyExistsException("Course already has an instructor with id - " + course.getInstructor().getInstructorId());
         }
 
         instructor.setCourse(course);
-        return instructorRepository.save(instructor);
+        Instructor updatedInstructor = instructorRepository.save(instructor);
+        return convertToDto(updatedInstructor);
     }
 
+    @Override
     @Transactional
-
-
     @CachePut(key = "#instructorId", cacheNames = "instructors")
-    public Instructor deRegisterInstructorFromCourse(Long instructorId) {
+    public InstructorDto deRegisterInstructorFromCourse(Long instructorId) {
         log.info("Removing instructor with ID {} from Course", instructorId);
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found with id: " + instructorId));
 
         instructor.setCourse(null);
-        return instructorRepository.save(instructor);
+        Instructor updatedInstructor = instructorRepository.save(instructor);
+        return convertToDto(updatedInstructor);
     }
 
+    @Override
     @Transactional
-    @CachePut(key = "#instructorId", cacheNames = "instructors")
-    public Instructor updateInstructor(Long instructorId, Instructor updatedInstructor) {
-        log.info("Updating instructor with ID {}", instructorId);
-        Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found"));
-        instructor.setInstructorName(updatedInstructor.getInstructorName());
-        instructor.setInstructorDob(updatedInstructor.getInstructorDob());
-        return instructorRepository.save(instructor);
+    public InstructorDto addInstructor(InstructorDto instructorDto, Long orgId) {
+        log.info("Adding instructor");
+        Organization organization = organizationRepository.findById(orgId)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id: " + orgId));
+
+        Instructor instructor = convertToEntity(instructorDto);
+
+        if(instructor.getInstructorId() != null && instructorRepository.findById(instructor.getInstructorId()).isPresent()){
+            throw new DataAlreadyExistsException("Instructor already exists");
+        }
+
+        instructor.setOrganization(organization);
+        Instructor savedInstructor = instructorRepository.save(instructor);
+        return convertToDto(savedInstructor);
     }
 
+    @Override
     @Transactional
-    @CacheEvict(key = "#instructionId", cacheNames = "instructors")
-    public void deleteInstructor(Long instructorId) {
-        log.info("Deleting instructor with ID {}", instructorId);
-        Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found"));
-        instructorRepository.delete(instructor);
+    @CachePut(key = "#id", cacheNames = "instructors")
+    public InstructorDto updateInstructor(Long id, InstructorDto instructorDto) {
+        log.info("Updating instructor with ID {}", id);
+        Instructor existingInstructor = instructorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found with id: " + id));
+
+        existingInstructor.setInstructorName(instructorDto.getInstructorName());
+
+        Instructor updatedInstructor = instructorRepository.save(existingInstructor);
+        return convertToDto(updatedInstructor);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(key = "#id", cacheNames = "instructors")
+    public void deleteInstructor(Long id) {
+        log.info("Deleting instructor with ID {}", id);
+        if (!instructorRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Instructor not found with id: " + id);
+        }
+        instructorRepository.deleteById(id);
+    }
+
+    private InstructorDto convertToDto(Instructor instructor) {
+        InstructorDto dto = new InstructorDto();
+        BeanUtils.copyProperties(instructor, dto);
+        dto.setOrganizationId(instructor.getOrganization().getOrganizationId());
+        dto.setCourseId(instructor.getCourse() != null ? instructor.getCourse().getCourseId() : null);
+        return dto;
+    }
+
+    private Instructor convertToEntity(InstructorDto dto) {
+        Instructor entity = new Instructor();
+        BeanUtils.copyProperties(dto, entity);
+        return entity;
     }
 }
-

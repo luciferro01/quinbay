@@ -1,22 +1,15 @@
 package com.mohil_bansal.assignment.student_learning_management_system.services;
 
-import com.mohil_bansal.assignment.student_learning_management_system.entity.Instructor;
+import com.mohil_bansal.assignment.student_learning_management_system.dto.InstructorDto;
 
 import java.util.List;
 
 public interface InstructorService {
-
-    List<Instructor> getAllInstructors();
-
-    Instructor findInstructionById(Long instructorId);
-
-    Instructor addInstructor(Instructor instructor, Long organizationId);
-
-    Instructor registerInstructorToCourse(Long instructorId, Long courseId);
-
-    Instructor deRegisterInstructorFromCourse(Long instructorId);
-
-    Instructor updateInstructor(Long instructorId, Instructor updatedInstructor);
-
-    void deleteInstructor(Long instructorId);
+    List<InstructorDto> getAllInstructors();
+    InstructorDto findInstructorById(Long id);
+    InstructorDto registerInstructorToCourse(Long instructorId, Long courseId);
+    InstructorDto deRegisterInstructorFromCourse(Long instructorId);
+    InstructorDto addInstructor(InstructorDto instructorDto, Long orgId);
+    InstructorDto updateInstructor(Long id, InstructorDto instructorDto);
+    void deleteInstructor(Long id);
 }

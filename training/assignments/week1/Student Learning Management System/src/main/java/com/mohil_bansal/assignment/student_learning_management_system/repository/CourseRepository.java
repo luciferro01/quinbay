@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
 
+
     //Adding Students is giving me infinite loop problem even if I have added all the necessary annotations to avoid it
     //So, I am not adding students to the course details
 @Query("SELECT new com.mohil_bansal.assignment.student_learning_management_system.dto.CourseDetailsDto(" +

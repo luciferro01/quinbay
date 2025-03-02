@@ -1,20 +1,13 @@
 package com.mohil_bansal.assignment.student_learning_management_system.services;
 
-import com.mohil_bansal.assignment.student_learning_management_system.dto.CourseDetailsDto;
-import com.mohil_bansal.assignment.student_learning_management_system.entity.Course;
+import com.mohil_bansal.assignment.student_learning_management_system.dto.CourseDto;
 
 import java.util.List;
 
 public interface CourseService {
-
-    List<Course> getAllCourses();
-
-    Course getCourseById(Long courseId);
-
-    Course addCourse(Course course, Long organizationId);
-
-    void deleteCourse(Long courseId);
-
-    CourseDetailsDto getCourseDetailsById(Long courseId);
-
+    List<CourseDto> getAllCourses();
+    CourseDto getCourseById(Long id);
+    CourseDto addCourse(CourseDto courseDto, Long orgId);
+    CourseDto updateCourse(Long id, CourseDto courseDto);
+    void deleteCourse(Long id);
 }
