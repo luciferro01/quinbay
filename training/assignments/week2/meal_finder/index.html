@@ -1,19 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta viweport="width=device-width, initial-scale=1.0" />
-    <title>Meal Finder</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Meals by Mohil Bansal</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Meal Finder</h1>
-    <form id="meal-form">
-      <label for="meal-name">Meal Name:</label>
-      <input type="text" id="meal-name" name="meal-name" required />
-      <button type="submit">Find Meal</button>
-    </form>
-    <div id="meal-result"></div>
+    <header>
+      <h1>The Meals<sub>by Mohil Bansal</sub></h1>
+      <div class="search-container">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search for meals..."
+        />
+        <select title="Select Category" id="category-dropdown">
+          <option value="">-- Select Category --</option>
+        </select>
+      </div>
+    </header>
+
+    <section id="categories-section">
+      <h2>Categories</h2>
+      <div id="categories-container"></div>
+    </section>
+
+    <section id="meals-section">
+      <h2>Meals</h2>
+      <div id="meals-container"></div>
+    </section>
+
     <script src="script.js"></script>
   </body>
 </html>
