@@ -1,5 +1,10 @@
 <script>
+import FetchApp from "./FetchApp.vue";
+
 export default {
+    components: {
+        FetchApp,
+    },
     data() {
         return {
             message: "Hello Vue!",
@@ -28,7 +33,7 @@ export default {
 </script>
 
 <template>
-    <div>
+    <!-- <div>
         <input v-bind:value="message" @input="updateMessage($event)" />
         <p>{{ message }}</p>
         <input v-model="message" />
@@ -54,7 +59,8 @@ export default {
             </p>
         </div>
         <span v-for="n in 10">{{ n }}</span>
-    </div>
+    </div> -->
+    <FetchApp />
 </template>
 
 <style scoped></style>
